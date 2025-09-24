@@ -1,0 +1,183 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #fafafa;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* HEADER FIJO */
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  background: #000;
+  color: #fff;
+  z-index: 1000;
+  flex-wrap: wrap; 
+}
+
+.logo img {
+  height: 50px;
+  width: auto;
+}
+
+.main-header nav ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.main-header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.main-header nav a.active,
+.main-header nav a:hover {
+  color: #f39c12;
+}
+
+.whatsapp-float {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 20px;
+  right: 20px;
+  background-color: #25d366;  /* verde oficial de WhatsApp */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+  transition: transform 0.2s ease;
+}
+
+.whatsapp-float img {
+  width: 35px;
+  height: 35px;
+}
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 5rem 1rem 3rem;
+  margin-top: 70px;
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('nosotros-hero.jpg') center/cover;
+  color: #fff;
+}
+
+.hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* HISTORIA */
+.historia {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.historia h2 {
+  color: #f39c12;
+  margin-bottom: 1rem;
+}
+
+/* MISIÓN Y VISIÓN */
+.mision-vision {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 3rem 2rem;
+}
+
+.mision-vision div {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* EQUIPO */
+.equipo {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.equipo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.equipo .foto {
+  background: #ddd url('oficina.jpg') center/cover;
+  height: 200px;
+  border-radius: 10px;
+}
+
+/* REDES */
+.redes {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.social-links a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: #f39c12;
+}
+.social-links img {
+  width: 40px;       /* Ajusta el tamaño (ancho) */
+  height: 40px;      /* Ajusta el tamaño (alto) */
+  object-fit: contain;
+  filter: invert(100%);  /* Aplica negativo */
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Efecto al pasar el mouse */
+.social-links img:hover {
+  transform: scale(1.2);   /* agranda un poco */
+  filter: invert(60%) sepia(80%) saturate(200%) hue-rotate(20deg);
+}
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background: #111;
+  color: #fff;
+  margin-top: 2rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hero h2 {
+    font-size: 2rem;
+  }
+}

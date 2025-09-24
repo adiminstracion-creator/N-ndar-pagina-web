@@ -1,0 +1,189 @@
+/* ---- RESET BÁSICO ---- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #fafafa;
+  color: #333;
+  line-height: 1.6;
+}
+
+.whatsapp-float {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 20px;
+  right: 20px;
+  background-color: #25d366;  /* verde oficial de WhatsApp */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+  transition: transform 0.2s ease;
+}
+
+.whatsapp-float img {
+  width: 35px;
+  height: 35px;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+}
+
+/* ---- HEADER ---- */
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  background: #000;
+  color: #fff;
+  z-index: 1000;
+  flex-wrap: wrap; 
+}
+
+.logo img {
+  height: 50px;   /* ajusta la altura de tu logo */
+  width: auto;    /* mantiene la proporción */
+}
+
+.main-header nav ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.main-header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.main-header nav a.active,
+.main-header nav a:hover {
+  color: #f39c12;
+}
+
+/* ---- HERO ---- */
+.hero {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('tu-foto-hero.jpg') center/cover;
+  color: #fff;
+}
+
+.hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ---- CARRUSEL ---- */
+.carrusel {
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 2rem auto;
+}
+
+.slider {
+  display: flex;
+  transition: transform 0.6s ease-in-out;
+}
+
+.slide {
+  min-width: 100%;
+  height: 400px;
+  background: #ccc url('tu-foto.jpg') center/cover;
+  border-radius: 12px;
+}
+
+.controles {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+  transform: translateY(-50%);
+}
+
+.controles span {
+  cursor: pointer;
+  font-size: 2rem;
+  color: #fff;
+  user-select: none;
+}
+
+/* ---- SECCIONES DE TRABAJO ---- */
+.trabajos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 3rem;
+  text-align: center;
+}
+
+.trabajos article {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.trabajos h3 {
+  margin-bottom: 1rem;
+  color: #f39c12;
+}
+
+/* ---- GALERÍA ---- */
+.galeria {
+  padding: 3rem 2rem;
+}
+
+.galeria h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.galeria .foto {
+  background: #ddd url('tu-foto-galeria.jpg') center/cover;
+  height: 200px;
+  border-radius: 10px;
+}
+
+/* ---- FOOTER ---- */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background: #111;
+  color: #fff;
+  margin-top: 2rem;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+  .hero h2 {
+    font-size: 2rem;
+  }
+
+  .slide {
+    height: 250px;
+  }
+}
