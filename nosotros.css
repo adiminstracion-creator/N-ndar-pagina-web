@@ -112,23 +112,41 @@ body {
 }
 
 /* EQUIPO */
-.equipo {
-  padding: 3rem 2rem;
-  text-align: center;
-}
-
 .equipo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  gap: 1.5rem;
   margin-top: 2rem;
 }
 
-.equipo .foto {
-  background: #ddd url('oficina.jpg') center/cover;
-  height: 200px;
-  border-radius: 10px;
+.equipo h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: #f39c12; /* opcional para resaltar */
 }
+
+
+/* 🔹 Caja contenedora del marco */
+.equipo .foto {
+  width: 100%;
+  height: 250px;               /* todas las fotos con altura fija */
+  border: 3px solid #ccc;      /* marco */
+  border-radius: 12px;
+  overflow: hidden;            /* evita que sobresalga */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;         /* gris de fondo por si no carga img */
+}
+
+/* 🔹 Imagen dentro de la caja */
+.equipo .foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* encasilla sin deformar */
+}
+
 
 /* REDES */
 .redes {
