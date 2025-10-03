@@ -1,3 +1,6 @@
+// =======================
+// CARRUSEL PRINCIPAL (slider de portada)
+// =======================
 const slider = document.querySelector('.slider');
 const slides = document.querySelectorAll('.slide');
 const prev = document.querySelector('.prev');
@@ -6,16 +9,23 @@ const next = document.querySelector('.next');
 let index = 0;
 
 function mostrarSlide(i) {
+  if (!slider || slides.length === 0) return; // 🔹 evita errores si no existe
   index = (i + slides.length) % slides.length;
   slider.style.transform = `translateX(${-index * 100}%)`;
 }
 
-prev.addEventListener('click', () => mostrarSlide(index - 1));
-next.addEventListener('click', () => mostrarSlide(index + 1));
+if (prev && next) {
+  prev.addEventListener('click', () => mostrarSlide(index - 1));
+  next.addEventListener('click', () => mostrarSlide(index + 1));
+}
 
-setInterval(() => mostrarSlide(index + 1), 4000); // autoplay
+if (slides.length > 1) {
+  setInterval(() => mostrarSlide(index + 1), 4000); // autoplay solo si hay más de 1 slide
+}
 
-// Carrusel automático para cada servicio
+// =======================
+// CARRUSELES DE SERVICIOS
+// =======================
 document.addEventListener("DOMContentLoaded", () => {
   const carruseles = document.querySelectorAll(".carrusel");
 
@@ -23,14 +33,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const imagenes = carrusel.querySelectorAll("img");
     let indice = 0;
 
-    // Mostrar la primera imagen
-    imagenes[indice].classList.add("active");
+    if (imagenes.length > 0) {
+      imagenes[indice].classList.add("active");  // 🔹 asegura que una se vea
+    }
 
-    setInterval(() => {
-      imagenes[indice].classList.remove("active");
-      indice = (indice + 1) % imagenes.length;
-      imagenes[indice].classList.add("active");
-    }, 3000); // cambia cada 3 segundos
+    if (imagenes.length > 1) {
+      setInterval(() => {
+        imagenes[indice].classList.remove("active");
+        indice = (indice + 1) % imagenes.length;
+        imagenes[indice].classList.add("active");
+      }, 2000);
+    }
   });
 });
-

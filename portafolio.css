@@ -108,6 +108,12 @@ body {
   border-radius: 12px;
 }
 
+.slide {
+  aspect-ratio: 16 / 9;
+  height: auto; /* quita el alto fijo */
+}
+
+
 .controles {
   position: absolute;
   top: 50%;
