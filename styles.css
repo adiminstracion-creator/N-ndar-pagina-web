@@ -10,12 +10,19 @@ body {
   line-height: 1.5;
   color: #333;
   background-color: #fff;
-  padding-top: 90px; /* 🔹 evita que el header tape las fotos */
+  position: relative;
 }
 
+main, 
+section:first-of-type {
+  margin-top: calc(80px + 1rem); /* espacio dinámico bajo el header */
+}
+
+/* En móviles, el header suele ser más alto */
 @media (max-width: 768px) {
-  body {
-    padding-top: 120px; /* más espacio en móviles */
+  main, 
+  section:first-of-type {
+    margin-top: calc(180px + 1rem);
   }
 }
 
