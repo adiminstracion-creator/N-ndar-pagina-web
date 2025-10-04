@@ -15,7 +15,7 @@ body {
 
 main, 
 section:first-of-type {
-  margin-top: calc(80px + 1rem); /* espacio dinámico bajo el header */
+  margin-top: calc(150px + 1rem); /* espacio dinámico bajo el header */
 }
 
 /* En móviles, el header suele ser más alto */
