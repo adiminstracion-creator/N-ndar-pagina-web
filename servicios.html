@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nandar - Eventos y Producciones</title>
   <link rel="stylesheet" href="servicios.css">
+  <link rel="icon" type="image/png" href="Imagenes/NANDAR-LOGO.png">
   <a href="https://wa.me/51966167916" class="whatsapp-float" target="_blank">
     <img src="Imagenes/iconos/whatsapp.png" alt="WhatsApp">
   </a>
@@ -32,15 +33,22 @@
     <h2>Nuestros Servicios</h2>
 
     <!-- Eventos principales -->
+<section id="servicios-generales" class="servicios-generales">
+    <h2>Nuestros Servicios</h2>
+
     <div class="servicios-bloque">
       <h3>Eventos principales</h3>
       <div class="servicios-grid">
+        
         <div class="servicio-carrusel">
           <div class="carrusel">
             <img src="Imagenes/servicio_quince.jpg" alt="collage de chicas en sus Quinceaños" class="active">
             <img src="Imagenes/quinceanera_doble1.jpg" alt="Quinceaños dos chicas en su sesion">
             <img src="Imagenes/quiceanera_rojo.jpg" alt="Quinceaños de chica de vestido rojo">
           </div>
+          <button class="btn-nav prev">❮</button>
+          <button class="btn-nav next">❯</button>
+          
           <div class="texto">
             <h4>Quinceaños</h4>
             <p>Celebra tus 15 con la mejor producción, desde la decoración hasta la música.</p>
@@ -53,6 +61,9 @@
             <img src="Imagenes/servicio_bodas3.jpg" alt="Bodas">
             <img src="Imagenes/servicio_bodas4.jpg" alt="Bodas">
           </div>
+          <button class="btn-nav prev">❮</button>
+          <button class="btn-nav next">❯</button>
+
           <div class="texto">
             <h4>Bodas</h4>
             <p>Organizamos la boda de tus sueños con fotografía, filmación y ambientación.</p>
@@ -61,15 +72,18 @@
       </div>
     </div>
 
-    <!-- Otros servicios -->
     <div class="servicios-bloque">
       <h3>Otros servicios</h3>
       <div class="servicios-grid">
+        
         <div class="servicio-carrusel">
           <div class="carrusel">
             <img src="Imagenes/servicio_fotografia.jpg" alt="Fotografía de pareja y una camara nikon" class="active">
             <img src="Imagenes/servicio_fotografia2.jpg" alt="Fotografía en estudio de una mujer rubia">
           </div>
+          <button class="btn-nav prev">❮</button>
+          <button class="btn-nav next">❯</button>
+
           <div class="texto">
             <h4>Fotografía</h4>
             <p>Capturamos cada momento con calidad profesional y creatividad única.</p>
@@ -82,14 +96,28 @@
             <img src="Imagenes/servicio_luces2.jpg" alt="Iluminaciónes profesionales de color azul y rosa">
             <img src="Imagenes/servicio_luces3.jpg" alt="Sonido profesional con equipos de alta calidad">
           </div>
+          <button class="btn-nav prev">❮</button>
+          <button class="btn-nav next">❯</button>
+
           <div class="texto">
             <h4>Sonido e Iluminación</h4>
             <p>Ambienta tu evento con luces y sonido de última generación.</p>
           </div>
         </div>
+
       </div>
     </div>
   </section>
+  
+  <div id="lightbox" class="lightbox">
+    <span class="close-lightbox">&times;</span>
+    
+    <a class="prev" id="prev-btn">&#10094;</a>
+    <a class="next" id="next-btn">&#10095;</a>
+    
+    <img class="lightbox-content" id="img-lightbox">
+    <div id="caption"></div>
+  </div>
 
   <!-- 🔹 FOOTER -->
   <footer>
@@ -101,6 +129,99 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script>// --- FUNCIONALIDAD LIGHTBOX CON NAVEGACIÓN ---
+
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('img-lightbox');
+  const closeBtn = document.querySelector('.close-lightbox');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  // 1. Seleccionamos TODAS las imágenes que queremos en la galería
+  // Importante: El orden en que aparezcan en el HTML será el orden de navegación
+  const imagenesGaleria = Array.from(document.querySelectorAll('.galeria-principal img, .servicio img, .foto img, .carrusel img'));
+
+  let indiceActual = 0; // Para saber qué foto estamos viendo
+
+  // Función para abrir el lightbox
+  function abrirLightbox(index) {
+      indiceActual = index;
+      actualizarImagen();
+      lightbox.style.display = "block";
+  }
+
+  // Función para cerrar
+  function cerrarLightbox() {
+      lightbox.style.display = "none";
+  }
+
+  // Función principal para cambiar la imagen (src)
+  function actualizarImagen() {
+      // Animación rápida de opacidad para suavizar el cambio
+      lightboxImg.style.opacity = "0";
+      
+      setTimeout(() => {
+          lightboxImg.src = imagenesGaleria[indiceActual].src;
+          // Si tienes un atributo 'alt', puedes usarlo como descripción
+          // document.getElementById('caption').innerText = imagenesGaleria[indiceActual].alt;
+          lightboxImg.style.opacity = "1";
+      }, 150);
+  }
+
+  // Función para ir a la Siguiente
+  function mostrarSiguiente() {
+      indiceActual++;
+      if (indiceActual >= imagenesGaleria.length) {
+          indiceActual = 0; // Vuelve al principio (loop infinito)
+      }
+      actualizarImagen();
+  }
+
+  // Función para ir a la Anterior
+  function mostrarAnterior() {
+      indiceActual--;
+      if (indiceActual < 0) {
+          indiceActual = imagenesGaleria.length - 1; // Va al final
+      }
+      actualizarImagen();
+  }
+
+  // --- EVENT LISTENERS ---
+
+  // Asignar evento click a cada imagen de la página
+  imagenesGaleria.forEach((img, index) => {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', () => {
+          abrirLightbox(index);
+      });
+  });
+
+  // Eventos de botones
+  closeBtn.addEventListener('click', cerrarLightbox);
+  nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Evita que se cierre al hacer clic en la flecha
+      mostrarSiguiente();
+  });
+  prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      mostrarAnterior();
+  });
+
+  // Cerrar al hacer clic fuera de la imagen
+  lightbox.addEventListener('click', (e) => {
+      if (e.target !== lightboxImg && e.target !== nextBtn && e.target !== prevBtn) {
+          cerrarLightbox();
+      }
+  });
+
+  // Navegación con Teclado (Flechas izquierda/derecha y Escape)
+  document.addEventListener('keydown', (e) => {
+      if (lightbox.style.display === "block") {
+          if (e.key === "ArrowRight") mostrarSiguiente();
+          if (e.key === "ArrowLeft") mostrarAnterior();
+          if (e.key === "Escape") cerrarLightbox();
+      }
+  });</script>
+  <script src="carrusel.js"></script>
 </body>
 </html>

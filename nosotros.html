@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nosotros - Nandar</title>
   <link rel="stylesheet" href="nosotros.css">
+  <link rel="icon" type="image/png" href="Imagenes/NANDAR-LOGO.png">
   <a href="https://wa.me/51966167916" class="whatsapp-float" target="_blank">
     <img src="Imagenes/iconos/whatsapp.png" alt="WhatsApp">
   </a>
@@ -63,7 +64,7 @@
       <div class="foto"><img src="Imagenes/nosotros-equipo.jpg" alt="Oficina"></div>
    </div>
   </section>
-
+ 
   <!-- REDES SOCIALES -->
   <section class="redes">
     <h2>Síguenos en redes</h2>
@@ -80,10 +81,114 @@
     </div>
   </section>
 
+  <div id="lightbox" class="lightbox">
+    <span class="close-lightbox">&times;</span>
+    
+    <a class="prev" id="prev-btn">&#10094;</a>
+    <a class="next" id="next-btn">&#10095;</a>
+    
+    <img class="lightbox-content" id="img-lightbox">
+    <div id="caption"></div>
+  </div>
+
   <!-- FOOTER -->
   <footer>
     <p>&copy; 2025 Nandar - Eventos y Producciones</p>
     <p>Contacto: +51 966 167 916</p>
   </footer>
+  
+  <script>// --- FUNCIONALIDAD LIGHTBOX CON NAVEGACIÓN ---
+
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('img-lightbox');
+  const closeBtn = document.querySelector('.close-lightbox');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  // 1. Seleccionamos TODAS las imágenes que queremos en la galería
+  // Importante: El orden en que aparezcan en el HTML será el orden de navegación
+  const imagenesGaleria = Array.from(document.querySelectorAll('.galeria-principal img, .servicio img, .foto img, .carrusel img'));
+
+  let indiceActual = 0; // Para saber qué foto estamos viendo
+
+  // Función para abrir el lightbox
+  function abrirLightbox(index) {
+      indiceActual = index;
+      actualizarImagen();
+      lightbox.style.display = "block";
+  }
+
+  // Función para cerrar
+  function cerrarLightbox() {
+      lightbox.style.display = "none";
+  }
+
+  // Función principal para cambiar la imagen (src)
+  function actualizarImagen() {
+      // Animación rápida de opacidad para suavizar el cambio
+      lightboxImg.style.opacity = "0";
+      
+      setTimeout(() => {
+          lightboxImg.src = imagenesGaleria[indiceActual].src;
+          // Si tienes un atributo 'alt', puedes usarlo como descripción
+          // document.getElementById('caption').innerText = imagenesGaleria[indiceActual].alt;
+          lightboxImg.style.opacity = "1";
+      }, 150);
+  }
+
+  // Función para ir a la Siguiente
+  function mostrarSiguiente() {
+      indiceActual++;
+      if (indiceActual >= imagenesGaleria.length) {
+          indiceActual = 0; // Vuelve al principio (loop infinito)
+      }
+      actualizarImagen();
+  }
+
+  // Función para ir a la Anterior
+  function mostrarAnterior() {
+      indiceActual--;
+      if (indiceActual < 0) {
+          indiceActual = imagenesGaleria.length - 1; // Va al final
+      }
+      actualizarImagen();
+  }
+
+  // --- EVENT LISTENERS ---
+
+  // Asignar evento click a cada imagen de la página
+  imagenesGaleria.forEach((img, index) => {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', () => {
+          abrirLightbox(index);
+      });
+  });
+
+  // Eventos de botones
+  closeBtn.addEventListener('click', cerrarLightbox);
+  nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Evita que se cierre al hacer clic en la flecha
+      mostrarSiguiente();
+  });
+  prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      mostrarAnterior();
+  });
+
+  // Cerrar al hacer clic fuera de la imagen
+  lightbox.addEventListener('click', (e) => {
+      if (e.target !== lightboxImg && e.target !== nextBtn && e.target !== prevBtn) {
+          cerrarLightbox();
+      }
+  });
+
+  // Navegación con Teclado (Flechas izquierda/derecha y Escape)
+  document.addEventListener('keydown', (e) => {
+      if (lightbox.style.display === "block") {
+          if (e.key === "ArrowRight") mostrarSiguiente();
+          if (e.key === "ArrowLeft") mostrarAnterior();
+          if (e.key === "Escape") cerrarLightbox();
+      }
+  });</script>
 </body>
 </html>

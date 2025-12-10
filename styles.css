@@ -308,3 +308,188 @@ footer .ubicacion {
     height: 200px;
   }
 }
+
+/* LIGHTBOX */
+.lightbox {
+  display: none; 
+  position: fixed; 
+  z-index: 2000; 
+  padding-top: 60px; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: hidden; /* Evita scroll doble */
+  background-color: rgba(0,0,0,0.95); /* Fondo más oscuro */
+  backdrop-filter: blur(5px);
+  user-select: none; /* Evita seleccionar texto al hacer clic rápido */
+}
+
+.lightbox-content {
+  margin: auto;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 90%;
+  max-height: 85vh; /* Ajuste para que quepa con las flechas */
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
+  animation: zoom 0.3s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0.9); opacity: 0} 
+  to {transform:scale(1); opacity: 1}
+}
+
+/* Botón Cerrar */
+.close-lightbox {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+  z-index: 2002;
+}
+
+.close-lightbox:hover {
+  color: #f39c12;
+}
+
+/* --- FLECHAS DE NAVEGACIÓN --- */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -50px;
+  color: white;
+  font-weight: bold;
+  font-size: 40px; /* Flechas grandes */
+  transition: 0.3s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  z-index: 2001;
+  background-color: rgba(0, 0, 0, 0.3); /* Fondo sutil para que se vean siempre */
+}
+
+/* Posición Específica */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.prev {
+  left: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* Efecto Hover en Flechas */
+.prev:hover, .next:hover {
+  background-color: rgba(243, 156, 18, 0.8); /* Tu color dorado */
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Ajuste para móviles: flechas más pequeñas y separadas */
+@media only screen and (max-width: 700px){
+  .prev, .next {
+    font-size: 25px;
+    padding: 12px;
+    background-color: rgba(0, 0, 0, 0.5); 
+  }
+}
+
+/* HERO PRINCIPAL */
+.hero-principal {
+  position: relative;
+  height: 90vh; /* Ocupa casi toda la pantalla */
+  width: 100%;
+  background: url('Imagenes/portafolio_boda1.jpg') no-repeat center center/cover;
+  /* Usamos una de tus mejores fotos de fondo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 70px; /* Ajuste por el header fijo */
+}
+
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.6); /* Oscurece la foto para leer el texto */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-content {
+  text-align: center;
+  color: #fff;
+  padding: 20px;
+  animation: fadeIn 1.5s ease;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-family: 'Playfair Display', serif; /* Una fuente más elegante si puedes importarla */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+/* BOTONES */
+.btn {
+  display: inline-block;
+  padding: 12px 30px;
+  margin: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background-color: #f39c12;
+  color: #fff;
+  border: 2px solid #f39c12;
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: #f39c12;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+}
+
+.btn-outline:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Ajuste Movil Hero */
+@media (max-width: 768px) {
+  .hero-content h1 { font-size: 2rem; }
+  .hero-principal { height: 70vh; }
+}

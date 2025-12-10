@@ -165,3 +165,141 @@ footer {
     height: 250px;
   }
 }
+
+/* LIGHTBOX */
+.lightbox {
+  display: none; 
+  position: fixed; 
+  z-index: 2000; 
+  padding-top: 60px; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: hidden; /* Evita scroll doble */
+  background-color: rgba(0,0,0,0.95); /* Fondo más oscuro */
+  backdrop-filter: blur(5px);
+  user-select: none; /* Evita seleccionar texto al hacer clic rápido */
+}
+
+.lightbox-content {
+  margin: auto;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 90%;
+  max-height: 85vh; /* Ajuste para que quepa con las flechas */
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
+  animation: zoom 0.3s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0.9); opacity: 0} 
+  to {transform:scale(1); opacity: 1}
+}
+
+/* Botón Cerrar */
+.close-lightbox {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+  z-index: 2002;
+}
+
+.close-lightbox:hover {
+  color: #f39c12;
+}
+
+/* --- FLECHAS DE NAVEGACIÓN --- */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -50px;
+  color: white;
+  font-weight: bold;
+  font-size: 40px; /* Flechas grandes */
+  transition: 0.3s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  z-index: 2001;
+  background-color: rgba(0, 0, 0, 0.3); /* Fondo sutil para que se vean siempre */
+}
+
+/* Posición Específica */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.prev {
+  left: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* Efecto Hover en Flechas */
+.prev:hover, .next:hover {
+  background-color: rgba(243, 156, 18, 0.8); /* Tu color dorado */
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Ajuste para móviles: flechas más pequeñas y separadas */
+@media only screen and (max-width: 700px){
+  .prev, .next {
+    font-size: 25px;
+    padding: 12px;
+    background-color: rgba(0, 0, 0, 0.5); 
+  }
+}
+
+/* --- MEJORAS CARRUSEL SERVICIOS --- */
+
+.servicio-carrusel {
+  position: relative; /* Necesario para posicionar las flechas */
+}
+
+/* Estilo de los botones (flechas) */
+.btn-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  padding: 10px 15px;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  opacity: 0; /* Invisibles por defecto */
+  transition: all 0.3s ease;
+}
+
+.btn-nav:hover {
+  background-color: #f39c12; /* Tu color dorado */
+  transform: translateY(-50%) scale(1.1);
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* Mostrar flechas al pasar el mouse por encima del servicio */
+.servicio-carrusel:hover .btn-nav {
+  opacity: 1;
+}
+
+/* Pequeño zoom a la imagen al pasar el mouse para dar vida */
+.servicio-carrusel:hover .carrusel img.active {
+  transform: scale(1.05);
+  transition: transform 6s ease; /* Zoom muy lento y sutil */
+}

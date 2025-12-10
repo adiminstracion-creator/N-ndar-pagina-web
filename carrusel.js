@@ -24,25 +24,77 @@ if (slides.length > 1) {
 }
 
 // =======================
-// CARRUSELES DE SERVICIOS
+// CARRUSELES DE SERVICIOS(MEJORADO)
 // =======================
 document.addEventListener("DOMContentLoaded", () => {
-  const carruseles = document.querySelectorAll(".carrusel");
+  // Seleccionamos todos los contenedores principales
+  const bloquesServicio = document.querySelectorAll(".servicio-carrusel");
 
-  carruseles.forEach(carrusel => {
-    const imagenes = carrusel.querySelectorAll("img");
+  bloquesServicio.forEach(bloque => {
+    const imagenes = bloque.querySelectorAll(".carrusel img");
+    const btnPrev = bloque.querySelector(".prev");
+    const btnNext = bloque.querySelector(".next");
     let indice = 0;
+    let intervalo;
 
-    if (imagenes.length > 0) {
-      imagenes[indice].classList.add("active");  // 🔹 asegura que una se vea
+    // Función para mostrar imagen específica
+    function mostrarImagen(n) {
+      // Quitar clase active a todas
+      imagenes.forEach(img => img.classList.remove("active"));
+      
+      // Calcular nuevo índice (ciclico)
+      indice = (n + imagenes.length) % imagenes.length;
+      
+      // Activar la nueva
+      imagenes[indice].classList.add("active");
     }
 
-    if (imagenes.length > 1) {
-      setInterval(() => {
-        imagenes[indice].classList.remove("active");
-        indice = (indice + 1) % imagenes.length;
-        imagenes[indice].classList.add("active");
-      }, 2000);
+    // Funciones de navegación
+    function siguiente() {
+      mostrarImagen(indice + 1);
+    }
+
+    function anterior() {
+      mostrarImagen(indice - 1);
+    }
+
+    // Iniciar auto-play
+    function iniciarAutoPlay() {
+      intervalo = setInterval(siguiente, 3500); // 3.5 segundos (más calmado)
+    }
+
+    // Pausar auto-play (al pasar mouse o hacer click)
+    function pausarAutoPlay() {
+      clearInterval(intervalo);
+    }
+
+    // --- EVENTOS ---
+    if (btnNext && btnPrev) {
+      btnNext.addEventListener("click", (e) => {
+        e.stopPropagation(); // Evita conflictos
+        pausarAutoPlay();
+        siguiente();
+        iniciarAutoPlay(); // Reinicia el timer
+      });
+
+      btnPrev.addEventListener("click", (e) => {
+        e.stopPropagation();
+        pausarAutoPlay();
+        anterior();
+        iniciarAutoPlay();
+      });
+    }
+
+    // Pausar si el mouse está encima (para leer o ver detalle)
+    bloque.addEventListener("mouseenter", pausarAutoPlay);
+    bloque.addEventListener("mouseleave", iniciarAutoPlay);
+
+    // Inicializar
+    if (imagenes.length > 0) {
+      imagenes[0].classList.add("active");
+      if (imagenes.length > 1) {
+        iniciarAutoPlay();
+      }
     }
   });
 });
