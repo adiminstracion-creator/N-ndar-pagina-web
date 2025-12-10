@@ -131,99 +131,184 @@
     </div>
   </footer>
 
-  <script>// --- FUNCIONALIDAD LIGHTBOX CON NAVEGACIÓN ---
 
+<script>
+  // --- LIGHTBOX CON ZOOM Y NAVEGACIÓN (FINAL para portafolio.html) ---
+
+  // Elementos del Lightbox
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('img-lightbox');
   const closeBtn = document.querySelector('.close-lightbox');
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
 
-  // 1. Seleccionamos TODAS las imágenes que queremos en la galería
-  // Importante: El orden en que aparezcan en el HTML será el orden de navegación
-  const imagenesGaleria = Array.from(document.querySelectorAll('.galeria-principal img, .servicio img, .foto img, .carrusel img'));
+  // 1. SELECTOR CORREGIDO: SELECCIONA LAS FOTOS DE LA GALERÍA DESTACADA Y DEL CARRUSEL DE CABECERA
+  const imagenesGaleria = Array.from(document.querySelectorAll('.galeria-grid .foto img, .carrusel .slide img'));
 
-  let indiceActual = 0; // Para saber qué foto estamos viendo
+  let indiceActual = 0;
+  let escala = 1;
+  let pany = 0;
+  let panx = 0;
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
 
-  // Función para abrir el lightbox
+  // --- FUNCIONES BÁSICAS DEL LIGHTBOX ---
+
   function abrirLightbox(index) {
+      if (imagenesGaleria.length === 0) return;
       indiceActual = index;
       actualizarImagen();
-      lightbox.style.display = "block";
+      lightbox.style.display = "flex"; 
+      lightbox.style.alignItems = "center";
+      lightbox.style.justifyContent = "center";
   }
 
-  // Función para cerrar
   function cerrarLightbox() {
       lightbox.style.display = "none";
+      resetZoom(); 
   }
 
-  // Función principal para cambiar la imagen (src)
   function actualizarImagen() {
-      // Animación rápida de opacidad para suavizar el cambio
       lightboxImg.style.opacity = "0";
-      
       setTimeout(() => {
           lightboxImg.src = imagenesGaleria[indiceActual].src;
-          // Si tienes un atributo 'alt', puedes usarlo como descripción
-          // document.getElementById('caption').innerText = imagenesGaleria[indiceActual].alt;
+          resetZoom(); 
           lightboxImg.style.opacity = "1";
       }, 150);
   }
 
-  // Función para ir a la Siguiente
   function mostrarSiguiente() {
-      indiceActual++;
-      if (indiceActual >= imagenesGaleria.length) {
-          indiceActual = 0; // Vuelve al principio (loop infinito)
-      }
+      indiceActual = (indiceActual + 1) % imagenesGaleria.length;
       actualizarImagen();
   }
 
-  // Función para ir a la Anterior
   function mostrarAnterior() {
-      indiceActual--;
-      if (indiceActual < 0) {
-          indiceActual = imagenesGaleria.length - 1; // Va al final
-      }
+      indiceActual = (indiceActual - 1 + imagenesGaleria.length) % imagenesGaleria.length; 
       actualizarImagen();
   }
 
-  // --- EVENT LISTENERS ---
+  // --- LÓGICA DE ZOOM Y ARRASTRE ---
+  function aplicarTransformacion() {
+      if (escala < 1) escala = 1;
+      if (escala > 4) escala = 4;
+      lightboxImg.style.transform = `translate(${panx}px, ${pany}px) scale(${escala})`;
+  }
 
-  // Asignar evento click a cada imagen de la página
+  function resetZoom() {
+      escala = 1;
+      pany = 0;
+      panx = 0;
+      lightboxImg.style.transform = `translate(0px, 0px) scale(1)`;
+  }
+
+  // Zoom con Rueda (Escritorio)
+  lightboxImg.addEventListener('wheel', (e) => {
+      e.preventDefault(); 
+      const delta = e.deltaY * -0.001;
+      escala += delta;
+      aplicarTransformacion();
+  });
+
+  // Arrastre con Mouse (Escritorio)
+  lightboxImg.addEventListener('mousedown', (e) => {
+      if (escala > 1) { 
+          isDragging = true;
+          startX = e.clientX - panx;
+          startY = e.clientY - pany;
+          lightboxImg.style.transition = "none";
+      }
+  });
+
+  window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+          e.preventDefault();
+          panx = e.clientX - startX;
+          pany = e.clientY - startY;
+          aplicarTransformacion();
+      }
+  });
+
+  window.addEventListener('mouseup', () => {
+      if (isDragging) {
+          isDragging = false;
+          lightboxImg.style.transition = "transform 0.1s ease-out"; 
+      }
+  });
+
+  // Zoom y Arrastre Táctil (Móvil)
+  let distanciaInicial = 0;
+
+  lightboxImg.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 2) {
+          distanciaInicial = Math.hypot(
+              e.touches[0].pageX - e.touches[1].pageX,
+              e.touches[0].pageY - e.touches[1].pageY
+          );
+      } else if (e.touches.length === 1 && escala > 1) {
+          isDragging = true;
+          startX = e.touches[0].clientX - panx;
+          startY = e.touches[0].clientY - pany;
+          lightboxImg.style.transition = "none";
+      }
+  });
+
+  lightboxImg.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 2) {
+          e.preventDefault();
+          const distanciaActual = Math.hypot(
+              e.touches[0].pageX - e.touches[1].pageX,
+              e.touches[0].pageY - e.touches[1].pageY
+          );
+          
+          const delta = distanciaActual - distanciaInicial;
+          escala += delta * 0.01;
+          distanciaInicial = distanciaActual;
+          aplicarTransformacion();
+
+      } else if (e.touches.length === 1 && isDragging) {
+          e.preventDefault();
+          panx = e.touches[0].clientX - startX;
+          pany = e.touches[0].clientY - startY;
+          aplicarTransformacion();
+      }
+  });
+
+  lightboxImg.addEventListener('touchend', () => {
+      isDragging = false;
+      lightboxImg.style.transition = "transform 0.1s ease-out";
+  });
+
+
+  // --- EVENT LISTENERS GENERALES ---
+
+  // Asignar evento click a cada imagen
   imagenesGaleria.forEach((img, index) => {
       img.style.cursor = 'pointer';
-      img.addEventListener('click', () => {
-          abrirLightbox(index);
-      });
+      img.addEventListener('click', () => abrirLightbox(index));
   });
 
-  // Eventos de botones
+  // Eventos de botones y cierre
   closeBtn.addEventListener('click', cerrarLightbox);
-  nextBtn.addEventListener('click', (e) => {
-      e.stopPropagation(); // Evita que se cierre al hacer clic en la flecha
-      mostrarSiguiente();
-  });
-  prevBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      mostrarAnterior();
-  });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); mostrarSiguiente(); });
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); mostrarAnterior(); });
 
-  // Cerrar al hacer clic fuera de la imagen
+  // Cerrar al dar click fuera
   lightbox.addEventListener('click', (e) => {
-      if (e.target !== lightboxImg && e.target !== nextBtn && e.target !== prevBtn) {
+      if (e.target === lightbox) {
           cerrarLightbox();
       }
   });
 
-  // Navegación con Teclado (Flechas izquierda/derecha y Escape)
+  // Teclado
   document.addEventListener('keydown', (e) => {
-      if (lightbox.style.display === "block") {
+      if (lightbox.style.display === "flex") {
           if (e.key === "ArrowRight") mostrarSiguiente();
           if (e.key === "ArrowLeft") mostrarAnterior();
           if (e.key === "Escape") cerrarLightbox();
       }
-  });</script>
+  });
+</script>
 
   <script src="carrusel.js"></script>
 </body>

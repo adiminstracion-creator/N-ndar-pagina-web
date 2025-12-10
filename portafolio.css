@@ -241,7 +241,7 @@ footer {
   display: none; 
   position: fixed; 
   z-index: 2000; 
-  padding-top: 60px; 
+  /* REMOVIDO: padding-top: 60px; (Para permitir el centrado total) */
   left: 0;
   top: 0;
   width: 100%; 
@@ -250,6 +250,10 @@ footer {
   background-color: rgba(0,0,0,0.95); /* Fondo más oscuro */
   backdrop-filter: blur(5px);
   user-select: none; /* Evita seleccionar texto al hacer clic rápido */
+  
+  /* PROPIEDADES AÑADIDAS PARA CENTRADO TOTAL (necesario para zoom) */
+  align-items: center; 
+  justify-content: center;
 }
 
 .lightbox-content {
@@ -257,15 +261,25 @@ footer {
   display: block;
   width: auto;
   height: auto;
-  max-width: 90%;
-  max-height: 85vh; /* Ajuste para que quepa con las flechas */
+  max-width: 100%; /* MODIFICADO (de 90%) para que el zoom tenga espacio */
+  max-height: 100vh; /* MODIFICADO (de 85vh) para que el zoom tenga espacio */
   object-fit: contain;
   border-radius: 4px;
   box-shadow: 0 0 25px rgba(0,0,0,0.5);
-  animation: zoom 0.3s;
+  animation: zoomIn 0.3s; /* Ajustado el nombre del keyframe */
+  
+  /* --- PROPIEDADES CLAVE PARA EL ZOOM --- */
+  transform-origin: center center;
+  transition: transform 0.1s ease-out; 
+  cursor: grab; 
 }
 
-@keyframes zoom {
+/* ESTADO AL ARRASTRAR EL MOUSE (NUEVA ZONA) */
+.lightbox-content:active {
+  cursor: grabbing; 
+}
+
+@keyframes zoomIn { /* Ajustado el nombre del keyframe */
   from {transform:scale(0.9); opacity: 0} 
   to {transform:scale(1); opacity: 1}
 }
@@ -294,33 +308,37 @@ footer {
   top: 50%;
   width: auto;
   padding: 16px;
-  margin-top: -50px;
+  /* REMOVIDO: margin-top: -50px; */
   color: white;
   font-weight: bold;
   font-size: 40px; /* Flechas grandes */
   transition: 0.3s ease;
-  border-radius: 0 3px 3px 0;
+  border-radius: 5px; /* MODIFICADO: Estilo más limpio y moderno */
   user-select: none;
   z-index: 2001;
   background-color: rgba(0, 0, 0, 0.3); /* Fondo sutil para que se vean siempre */
+  
+  /* PROPIEDAD AÑADIDA PARA CENTRADO VERTICAL CORRECTO */
+  transform: translateY(-50%);
 }
 
 /* Posición Específica */
 .next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
+  right: 20px; /* MODIFICADO: Separado del borde */
+  border-radius: 5px; /* MODIFICADO: Estilo más limpio */
 }
 
 .prev {
-  left: 0;
-  border-radius: 3px 0 0 3px;
+  left: 20px; /* MODIFICADO: Separado del borde */
+  border-radius: 5px; /* MODIFICADO: Estilo más limpio */
 }
 
 /* Efecto Hover en Flechas */
 .prev:hover, .next:hover {
   background-color: rgba(243, 156, 18, 0.8); /* Tu color dorado */
   color: white;
-  transform: scale(1.1);
+  /* MODIFICADO: Se necesita la transformación completa para que funcione el hover */
+  transform: translateY(-50%) scale(1.1); 
 }
 
 /* Ajuste para móviles: flechas más pequeñas y separadas */

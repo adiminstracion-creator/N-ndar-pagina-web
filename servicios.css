@@ -166,12 +166,15 @@ footer {
   }
 }
 
-/* LIGHTBOX */
+/* =========================================
+   LIGHTBOX CON ZOOM Y NAVEGACIÓN
+   ========================================= */
+
 .lightbox {
   display: none; 
   position: fixed; 
   z-index: 2000; 
-  padding-top: 60px; 
+  /* REMOVIDO: padding-top: 60px; (Para permitir el centrado total del zoom) */
   left: 0;
   top: 0;
   width: 100%; 
@@ -180,6 +183,10 @@ footer {
   background-color: rgba(0,0,0,0.95); /* Fondo más oscuro */
   backdrop-filter: blur(5px);
   user-select: none; /* Evita seleccionar texto al hacer clic rápido */
+  
+  /* PROPIEDADES PARA CENTRADO TOTAL (Necesario para el Zoom) */
+  align-items: center; 
+  justify-content: center;
 }
 
 .lightbox-content {
@@ -187,15 +194,25 @@ footer {
   display: block;
   width: auto;
   height: auto;
-  max-width: 90%;
-  max-height: 85vh; /* Ajuste para que quepa con las flechas */
+  max-width: 100%; /* MODIFICADO: Usa todo el espacio para el zoom */
+  max-height: 100vh; /* MODIFICADO: Usa toda la altura para el zoom */
   object-fit: contain;
   border-radius: 4px;
   box-shadow: 0 0 25px rgba(0,0,0,0.5);
-  animation: zoom 0.3s;
+  animation: zoomIn 0.3s; /* Ajustado el nombre para evitar conflictos */
+  
+  /* --- PROPIEDADES CLAVE PARA EL ZOOM --- */
+  transform-origin: center center;
+  transition: transform 0.1s ease-out; 
+  cursor: grab; /* Manita abierta */
 }
 
-@keyframes zoom {
+/* ESTADO AL ARRASTRAR EL MOUSE */
+.lightbox-content:active {
+  cursor: grabbing; /* Manita cerrada */
+}
+
+@keyframes zoomIn {
   from {transform:scale(0.9); opacity: 0} 
   to {transform:scale(1); opacity: 1}
 }
@@ -217,43 +234,46 @@ footer {
   color: #f39c12;
 }
 
-/* --- FLECHAS DE NAVEGACIÓN --- */
+/* --- FLECHAS DE NAVEGACIÓN (DEL LIGHTBOX) --- */
 .prev, .next {
   cursor: pointer;
   position: absolute;
   top: 50%;
   width: auto;
   padding: 16px;
-  margin-top: -50px;
+  /* REMOVIDO: margin-top: -50px; (Usamos transform para mayor precisión) */
   color: white;
   font-weight: bold;
   font-size: 40px; /* Flechas grandes */
   transition: 0.3s ease;
-  border-radius: 0 3px 3px 0;
+  border-radius: 5px; 
   user-select: none;
   z-index: 2001;
-  background-color: rgba(0, 0, 0, 0.3); /* Fondo sutil para que se vean siempre */
+  background-color: rgba(0, 0, 0, 0.3); /* Fondo sutil */
+  
+  /* CENTRADO VERTICAL EXACTO */
+  transform: translateY(-50%);
 }
 
 /* Posición Específica */
 .next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
+  right: 20px; 
+  border-radius: 5px;
 }
 
 .prev {
-  left: 0;
-  border-radius: 3px 0 0 3px;
+  left: 20px; 
+  border-radius: 5px;
 }
 
 /* Efecto Hover en Flechas */
 .prev:hover, .next:hover {
-  background-color: rgba(243, 156, 18, 0.8); /* Tu color dorado */
+  background-color: rgba(243, 156, 18, 0.8); /* Dorado */
   color: white;
-  transform: scale(1.1);
+  transform: translateY(-50%) scale(1.1); 
 }
 
-/* Ajuste para móviles: flechas más pequeñas y separadas */
+/* Ajuste para móviles: flechas más pequeñas */
 @media only screen and (max-width: 700px){
   .prev, .next {
     font-size: 25px;
@@ -262,13 +282,16 @@ footer {
   }
 }
 
-/* --- MEJORAS CARRUSEL SERVICIOS --- */
+/* =========================================
+   CARRUSEL INTERNO DE SERVICIOS
+   (Mantiene el estilo de tus tarjetas)
+   ========================================= */
 
 .servicio-carrusel {
-  position: relative; /* Necesario para posicionar las flechas */
+  position: relative; /* Necesario para posicionar las flechas internas */
 }
 
-/* Estilo de los botones (flechas) */
+/* Estilo de los botones internos (flechas pequeñas) */
 .btn-nav {
   position: absolute;
   top: 50%;
@@ -286,20 +309,22 @@ footer {
 }
 
 .btn-nav:hover {
-  background-color: #f39c12; /* Tu color dorado */
+  background-color: #f39c12; 
   transform: translateY(-50%) scale(1.1);
 }
 
-.prev { left: 10px; }
-.next { right: 10px; }
+/* Posicionamiento específico para el carrusel interno */
+/* Nota: Usamos selectores más específicos para no afectar al lightbox */
+.servicio-carrusel .prev { left: 10px; }
+.servicio-carrusel .next { right: 10px; }
 
 /* Mostrar flechas al pasar el mouse por encima del servicio */
 .servicio-carrusel:hover .btn-nav {
   opacity: 1;
 }
 
-/* Pequeño zoom a la imagen al pasar el mouse para dar vida */
+/* Pequeño zoom a la imagen del carrusel al pasar el mouse */
 .servicio-carrusel:hover .carrusel img.active {
   transform: scale(1.05);
-  transition: transform 6s ease; /* Zoom muy lento y sutil */
+  transition: transform 6s ease; 
 }

@@ -205,7 +205,7 @@ footer {
   display: none; 
   position: fixed; 
   z-index: 2000; 
-  padding-top: 60px; 
+  /* REMOVIDO: padding-top: 60px; (para centrar mejor el zoom) */
   left: 0;
   top: 0;
   width: 100%; 
@@ -214,6 +214,10 @@ footer {
   background-color: rgba(0,0,0,0.95); /* Fondo más oscuro */
   backdrop-filter: blur(5px);
   user-select: none; /* Evita seleccionar texto al hacer clic rápido */
+  
+  /* PROPIEDADES NECESARIAS PARA CENTRAR EL ZOOM */
+  align-items: center;
+  justify-content: center;
 }
 
 .lightbox-content {
@@ -221,15 +225,26 @@ footer {
   display: block;
   width: auto;
   height: auto;
-  max-width: 90%;
-  max-height: 85vh; /* Ajuste para que quepa con las flechas */
+  max-width: 100%; /* AUMENTADO para que el zoom use todo el espacio */
+  max-height: 100vh; /* AUMENTADO para que el zoom use toda la altura */
   object-fit: contain;
   border-radius: 4px;
   box-shadow: 0 0 25px rgba(0,0,0,0.5);
-  animation: zoom 0.3s;
+  animation: zoomIn 0.3s; /* Nombre ajustado */
+  
+  /* PROPIEDADES DE ZOOM/ARRASTRE */
+  transform-origin: center center;
+  transition: transform 0.1s ease-out; /* Suavidad al hacer zoom */
+  cursor: grab; /* Indica que la imagen se puede arrastrar */
 }
 
-@keyframes zoom {
+/* ESTADO AL ARRASTRAR EL MOUSE */
+.lightbox-content:active {
+  cursor: grabbing; /* Manita cerrada al arrastrar */
+}
+
+/* Animación de entrada: renombrado a zoomIn */
+@keyframes zoomIn {
   from {transform:scale(0.9); opacity: 0} 
   to {transform:scale(1); opacity: 1}
 }
@@ -263,21 +278,19 @@ footer {
   font-weight: bold;
   font-size: 40px; /* Flechas grandes */
   transition: 0.3s ease;
-  border-radius: 0 3px 3px 0;
+  border-radius: 5px; /* Ajustado a un valor para mejor estilo */
   user-select: none;
   z-index: 2001;
   background-color: rgba(0, 0, 0, 0.3); /* Fondo sutil para que se vean siempre */
 }
 
-/* Posición Específica */
+/* Posición Específica (Ajustado a 20px de los bordes) */
 .next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
+  right: 20px;
 }
 
 .prev {
-  left: 0;
-  border-radius: 3px 0 0 3px;
+  left: 20px;
 }
 
 /* Efecto Hover en Flechas */

@@ -310,109 +310,17 @@ footer .ubicacion {
   }
 }
 
-/* LIGHTBOX */
-.lightbox {
-  display: none; 
-  position: fixed; 
-  z-index: 2000; 
-  padding-top: 60px; 
-  left: 0;
-  top: 0;
-  width: 100%; 
-  height: 100%; 
-  overflow: hidden; /* Evita scroll doble */
-  background-color: rgba(0,0,0,0.95); /* Fondo más oscuro */
-  backdrop-filter: blur(5px);
-  user-select: none; /* Evita seleccionar texto al hacer clic rápido */
-}
+/* =========================================
+   1. HERO PRINCIPAL Y BOTONES
+   (Reemplaza el antiguo .galeria-principal)
+   ========================================= */
 
-.lightbox-content {
-  margin: auto;
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: 90%;
-  max-height: 85vh; /* Ajuste para que quepa con las flechas */
-  object-fit: contain;
-  border-radius: 4px;
-  box-shadow: 0 0 25px rgba(0,0,0,0.5);
-  animation: zoom 0.3s;
-}
-
-@keyframes zoom {
-  from {transform:scale(0.9); opacity: 0} 
-  to {transform:scale(1); opacity: 1}
-}
-
-/* Botón Cerrar */
-.close-lightbox {
-  position: absolute;
-  top: 15px;
-  right: 35px;
-  color: #f1f1f1;
-  font-size: 40px;
-  font-weight: bold;
-  transition: 0.3s;
-  cursor: pointer;
-  z-index: 2002;
-}
-
-.close-lightbox:hover {
-  color: #f39c12;
-}
-
-/* --- FLECHAS DE NAVEGACIÓN --- */
-.prev, .next {
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  width: auto;
-  padding: 16px;
-  margin-top: -50px;
-  color: white;
-  font-weight: bold;
-  font-size: 40px; /* Flechas grandes */
-  transition: 0.3s ease;
-  border-radius: 0 3px 3px 0;
-  user-select: none;
-  z-index: 2001;
-  background-color: rgba(0, 0, 0, 0.3); /* Fondo sutil para que se vean siempre */
-}
-
-/* Posición Específica */
-.next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
-}
-
-.prev {
-  left: 0;
-  border-radius: 3px 0 0 3px;
-}
-
-/* Efecto Hover en Flechas */
-.prev:hover, .next:hover {
-  background-color: rgba(243, 156, 18, 0.8); /* Tu color dorado */
-  color: white;
-  transform: scale(1.1);
-}
-
-/* Ajuste para móviles: flechas más pequeñas y separadas */
-@media only screen and (max-width: 700px){
-  .prev, .next {
-    font-size: 25px;
-    padding: 12px;
-    background-color: rgba(0, 0, 0, 0.5); 
-  }
-}
-
-/* HERO PRINCIPAL */
 .hero-principal {
   position: relative;
   height: 90vh; /* Ocupa casi toda la pantalla */
   width: 100%;
-  background: url('Imagenes/portafolio_boda1.jpg') no-repeat center center/cover;
   /* Usamos una de tus mejores fotos de fondo */
+  background: url('Imagenes/portafolio_boda1.jpg') no-repeat center center/cover; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -438,7 +346,8 @@ footer .ubicacion {
 .hero-content h1 {
   font-size: 3.5rem;
   margin-bottom: 1rem;
-  font-family: 'Playfair Display', serif; /* Una fuente más elegante si puedes importarla */
+  /* Usar fuente elegante si la importaste, sino se usa la del body */
+  font-family: 'Segoe UI', Tahoma, sans-serif; 
   text-transform: uppercase;
   letter-spacing: 2px;
 }
@@ -449,7 +358,7 @@ footer .ubicacion {
   font-weight: 300;
 }
 
-/* BOTONES */
+/* ESTILOS DE BOTONES */
 .btn {
   display: inline-block;
   padding: 12px 30px;
@@ -493,4 +402,189 @@ footer .ubicacion {
 @media (max-width: 768px) {
   .hero-content h1 { font-size: 2rem; }
   .hero-principal { height: 70vh; }
+}
+
+
+/* =========================================
+   2. LIGHTBOX CON ZOOM Y NAVEGACIÓN
+   ========================================= */
+
+/* Contenedor principal (Fondo oscuro) */
+.lightbox {
+  display: none;              
+  position: fixed; 
+  z-index: 2000;              
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: hidden;           
+  background-color: rgba(0,0,0,0.95); 
+  backdrop-filter: blur(5px); 
+  
+  /* Centrado del contenido, importante para el JS */
+  align-items: center;
+  justify-content: center;
+  
+  user-select: none;          
+}
+
+/* La imagen dentro del visor */
+.lightbox-content {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;       
+  max-height: 100vh;     
+  object-fit: contain;   
+  
+  /* Propiedades para el ZOOM y Movimiento */
+  transform-origin: center center;
+  transition: transform 0.1s ease-out; 
+  cursor: grab;          
+  
+  box-shadow: 0 0 30px rgba(0,0,0,0.8);
+  animation: zoomIn 0.3s ease;
+}
+
+/* Cambio de cursor al arrastrar */
+.lightbox-content:active {
+  cursor: grabbing;      
+}
+
+/* Animación de entrada */
+@keyframes zoomIn {
+  from {transform: scale(0.9); opacity: 0;} 
+  to {transform: scale(1); opacity: 1;}
+}
+
+/* --- BOTONES DE NAVEGACIÓN (Flechas) --- */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%); 
+  width: auto;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 40px;
+  transition: 0.3s ease;
+  user-select: none;
+  z-index: 2001;
+  background-color: rgba(0, 0, 0, 0.3); 
+  border-radius: 5px;
+}
+
+/* Posición específica */
+.next {
+  right: 20px;
+}
+
+.prev {
+  left: 20px;
+}
+
+/* Efecto al pasar el mouse por las flechas */
+.prev:hover, .next:hover {
+  background-color: rgba(243, 156, 18, 0.9); 
+  color: #fff;
+  transform: translateY(-50%) scale(1.1); 
+}
+
+/* --- BOTÓN CERRAR (X) --- */
+.close-lightbox {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #f1f1f1;
+  font-size: 45px;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+  z-index: 2002;
+  line-height: 1; 
+}
+
+.close-lightbox:hover {
+  color: #f39c12; 
+  text-shadow: 0 0 10px #f39c12;
+}
+
+/* =========================================
+   3. MENÚ HAMBURGUESA Y RESPONSIVE HEADER
+   (Actualiza la sección media query de header)
+   ========================================= */
+
+/* Estilo botón hamburguesa */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: #fff;
+  border-radius: 3px;
+  transition: all 0.3s;
+}
+
+/* RESPONSIVE MENU */
+@media (max-width: 768px) {
+  /* Mostrar botón en móvil */
+  .menu-toggle {
+    display: flex; 
+  }
+  
+  /* Esconder el menú por defecto */
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    right: -100%; 
+    width: 70%;
+    height: 100vh;
+    background: #000;
+    padding-top: 80px;
+    transition: 0.4s ease;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+  }
+
+  /* Mostrar menú cuando se activa (clase añadida por JS) */
+  .nav-menu.active {
+    right: 0; 
+  }
+
+  .nav-menu ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-menu li {
+    margin: 20px 0;
+  }
+
+  /* Responsive para Lightbox */
+  .prev, .next {
+    font-size: 25px;
+    padding: 12px;
+    background-color: rgba(0, 0, 0, 0.5); 
+  }
+  
+  .prev { left: 10px; }
+  .next { right: 10px; }
+  
+  .close-lightbox {
+    top: 15px;
+    right: 20px;
+    font-size: 35px;
+  }
 }

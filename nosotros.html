@@ -97,7 +97,7 @@
     <p>Contacto: +51 966 167 916</p>
   </footer>
   
-  <script>// --- FUNCIONALIDAD LIGHTBOX CON NAVEGACIÓN ---
+  <script>// --- LIGHTBOX CON ZOOM Y NAVEGACIÓN (FINAL) ---
 
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('img-lightbox');
@@ -105,69 +105,169 @@
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
 
-  // 1. Seleccionamos TODAS las imágenes que queremos en la galería
-  // Importante: El orden en que aparezcan en el HTML será el orden de navegación
-  const imagenesGaleria = Array.from(document.querySelectorAll('.galeria-principal img, .servicio img, .foto img, .carrusel img'));
+  // 1. Seleccionamos TODAS las imágenes relevantes en la página "Nosotros"
+  // Selecciona las imágenes del grid de equipo/oficinas (.foto img)
+  const imagenesGaleria = Array.from(document.querySelectorAll('.foto img'));
 
-  let indiceActual = 0; // Para saber qué foto estamos viendo
+  let indiceActual = 0;
 
-  // Función para abrir el lightbox
+  // Variables para el Zoom y Panning (Arrastre)
+  let escala = 1;
+  let pany = 0;
+  let panx = 0;
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+
+  // --- FUNCIONES BÁSICAS ---
+
   function abrirLightbox(index) {
       indiceActual = index;
       actualizarImagen();
-      lightbox.style.display = "block";
+      // Usamos flex para centrar el lightbox
+      lightbox.style.display = "flex"; 
+      lightbox.style.alignItems = "center";
+      lightbox.style.justifyContent = "center";
   }
 
-  // Función para cerrar
   function cerrarLightbox() {
       lightbox.style.display = "none";
+      resetZoom(); // Reiniciar zoom al cerrar
   }
 
-  // Función principal para cambiar la imagen (src)
   function actualizarImagen() {
-      // Animación rápida de opacidad para suavizar el cambio
+      // Pequeño efecto de carga/transición
       lightboxImg.style.opacity = "0";
-      
       setTimeout(() => {
           lightboxImg.src = imagenesGaleria[indiceActual].src;
-          // Si tienes un atributo 'alt', puedes usarlo como descripción
-          // document.getElementById('caption').innerText = imagenesGaleria[indiceActual].alt;
+          resetZoom(); // Importante: Reiniciar zoom al cambiar de foto
           lightboxImg.style.opacity = "1";
       }, 150);
   }
 
-  // Función para ir a la Siguiente
   function mostrarSiguiente() {
-      indiceActual++;
-      if (indiceActual >= imagenesGaleria.length) {
-          indiceActual = 0; // Vuelve al principio (loop infinito)
-      }
+      indiceActual = (indiceActual + 1) % imagenesGaleria.length;
       actualizarImagen();
   }
 
-  // Función para ir a la Anterior
   function mostrarAnterior() {
-      indiceActual--;
-      if (indiceActual < 0) {
-          indiceActual = imagenesGaleria.length - 1; // Va al final
-      }
+      // El (+ imagenesGaleria.length) asegura que el índice no sea negativo
+      indiceActual = (indiceActual - 1 + imagenesGaleria.length) % imagenesGaleria.length; 
       actualizarImagen();
   }
 
-  // --- EVENT LISTENERS ---
+  // --- LÓGICA DE ZOOM Y ARRASTRE ---
 
-  // Asignar evento click a cada imagen de la página
-  imagenesGaleria.forEach((img, index) => {
-      img.style.cursor = 'pointer';
-      img.addEventListener('click', () => {
-          abrirLightbox(index);
-      });
+  // Función para aplicar las transformaciones (Zoom y Movimiento)
+  function aplicarTransformacion() {
+      // Limitamos el zoom mínimo a 1 (tamaño original) y máximo a 4
+      if (escala < 1) escala = 1;
+      if (escala > 4) escala = 4;
+      
+      lightboxImg.style.transform = `translate(${panx}px, ${pany}px) scale(${escala})`;
+  }
+
+  // Reiniciar todo a la normalidad
+  function resetZoom() {
+      escala = 1;
+      pany = 0;
+      panx = 0;
+      lightboxImg.style.transform = `translate(0px, 0px) scale(1)`;
+  }
+
+  // 1. ZOOM CON RUEDA DEL MOUSE (Escritorio)
+  lightboxImg.addEventListener('wheel', (e) => {
+      e.preventDefault(); 
+      const delta = e.deltaY * -0.001; // Sensibilidad del zoom
+      escala += delta;
+      aplicarTransformacion();
   });
 
-  // Eventos de botones
+  // 2. ARRASTRAR IMAGEN (PANNING) - MOUSE (Escritorio)
+  lightboxImg.addEventListener('mousedown', (e) => {
+      if (escala > 1) { // Solo permitir arrastrar si hay zoom
+          isDragging = true;
+          startX = e.clientX - panx;
+          startY = e.clientY - pany;
+          lightboxImg.style.transition = "none"; // Eliminar transición para arrastre inmediato
+      }
+  });
+
+  window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+          e.preventDefault();
+          panx = e.clientX - startX;
+          pany = e.clientY - startY;
+          aplicarTransformacion();
+      }
+  });
+
+  window.addEventListener('mouseup', () => {
+      if (isDragging) {
+          isDragging = false;
+          lightboxImg.style.transition = "transform 0.1s ease-out"; // Restaurar suavidad
+      }
+  });
+
+  // 3. ZOOM Y ARRASTRE TÁCTIL (Móvil)
+  let distanciaInicial = 0;
+
+  lightboxImg.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 2) {
+          // Lógica de Pellizco (Zoom)
+          distanciaInicial = Math.hypot(
+              e.touches[0].pageX - e.touches[1].pageX,
+              e.touches[0].pageY - e.touches[1].pageY
+          );
+      } else if (e.touches.length === 1 && escala > 1) {
+          // Lógica de Arrastre (Pan)
+          isDragging = true;
+          startX = e.touches[0].clientX - panx;
+          startY = e.touches[0].clientY - pany;
+          lightboxImg.style.transition = "none";
+      }
+  });
+
+  lightboxImg.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 2) {
+          e.preventDefault();
+          const distanciaActual = Math.hypot(
+              e.touches[0].pageX - e.touches[1].pageX,
+              e.touches[0].pageY - e.touches[1].pageY
+          );
+          
+          // Ajuste de escala
+          const delta = distanciaActual - distanciaInicial;
+          escala += delta * 0.01;
+          distanciaInicial = distanciaActual;
+          aplicarTransformacion();
+
+      } else if (e.touches.length === 1 && isDragging) {
+          e.preventDefault();
+          panx = e.touches[0].clientX - startX;
+          pany = e.touches[0].clientY - startY;
+          aplicarTransformacion();
+      }
+  });
+
+  lightboxImg.addEventListener('touchend', () => {
+      isDragging = false;
+      lightboxImg.style.transition = "transform 0.1s ease-out";
+  });
+
+
+  // --- EVENT LISTENERS GENERALES ---
+
+  // Asignar evento click a cada imagen
+  imagenesGaleria.forEach((img, index) => {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', () => abrirLightbox(index));
+  });
+
+  // Eventos de botones y cierre
   closeBtn.addEventListener('click', cerrarLightbox);
   nextBtn.addEventListener('click', (e) => {
-      e.stopPropagation(); // Evita que se cierre al hacer clic en la flecha
+      e.stopPropagation();
       mostrarSiguiente();
   });
   prevBtn.addEventListener('click', (e) => {
@@ -175,16 +275,16 @@
       mostrarAnterior();
   });
 
-  // Cerrar al hacer clic fuera de la imagen
+  // Cerrar al dar click fuera
   lightbox.addEventListener('click', (e) => {
-      if (e.target !== lightboxImg && e.target !== nextBtn && e.target !== prevBtn) {
+      if (e.target === lightbox) { // Solo si se hace clic en el fondo del lightbox
           cerrarLightbox();
       }
   });
 
-  // Navegación con Teclado (Flechas izquierda/derecha y Escape)
+  // Teclado (Escape, Flechas)
   document.addEventListener('keydown', (e) => {
-      if (lightbox.style.display === "block") {
+      if (lightbox.style.display === "flex") {
           if (e.key === "ArrowRight") mostrarSiguiente();
           if (e.key === "ArrowLeft") mostrarAnterior();
           if (e.key === "Escape") cerrarLightbox();
